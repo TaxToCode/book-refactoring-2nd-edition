@@ -116,7 +116,7 @@ function playFor(aPerformance) {
   return plays[aPerformance.playID];
 }
 
-function amountFor(aPerformance, play) {
+function amountFor(aPerformance) {
   let result = 0; // 변수 초기화
   switch (playFor(aPerformance).type) {
     case 'tragedy':
@@ -138,7 +138,7 @@ function amountFor(aPerformance, play) {
   return result;
 }
 
-function statement(invoice, plays) {
+function statement(invoice) {
   let totalAmount = 0;
   let volumeCredits = 0;
   let result = `Statement for ${invoice.customer}\n`;
@@ -149,7 +149,7 @@ function statement(invoice, plays) {
   }).format;
 
   for (let perf of invoice.performances) {
-    const thisAmount = amountFor(perf, playFor(perf)); // 추출한 함수를 이용
+    const thisAmount = amountFor(perf); // 추출한 함수를 이용
 
     // add volume credits
     volumeCredits += Math.max(perf.audience - 30, 0);
