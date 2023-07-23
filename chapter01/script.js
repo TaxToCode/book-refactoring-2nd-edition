@@ -149,16 +149,16 @@ function statement(invoice, plays) {
   }).format;
 
   for (let perf of invoice.performances) {
-    const play = playFor(perf); // playFor 함수를 이용
-    const thisAmount = amountFor(perf, play); // 추출한 함수를 이용
+    const thisAmount = amountFor(perf, playFor(perf)); // 추출한 함수를 이용
 
     // add volume credits
     volumeCredits += Math.max(perf.audience - 30, 0);
     // add extra credit for every ten comedy attendees
-    if ('comedy' === play.type) volumeCredits += Math.floor(perf.audience / 5);
+    if ('comedy' === playFor(perf).type)
+      volumeCredits += Math.floor(perf.audience / 5);
 
     // print line for this order
-    result += `  ${play.name}: ${format(thisAmount / 100)} (${
+    result += `  ${playFor(perf).name}: ${format(thisAmount / 100)} (${
       perf.audience
     } seats)\n`;
     totalAmount += thisAmount;
