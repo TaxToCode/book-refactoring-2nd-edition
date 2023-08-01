@@ -62,6 +62,7 @@ function statement(invoice) {
   statementData.customer = invoice.customer; // 고객 데이터를 중간 데이터로 옮김
   statementData.performances = invoice.performances.map(enrichPerformance); // 공연 정보를 중간 데이터로 옮김
   statementData.totalAmount = totalAmount(statementData); // 총합을 계산하는 코드를 중간 데이터로 옮김
+  statementData.totalVolumeCredits = totalVolumeCredits(statementData); // 총 포인트를 계산하는 코드를 중간 데이터로 옮김
 
   return renderPlainText(statementData, plays); // 중간 데이터 구조를 인수로 전달
 
@@ -115,6 +116,14 @@ function statement(invoice) {
     }
     return result
   }
+
+  function totalVolumeCredits(data) {
+    let result = 0
+    for (let perf of data.performances) {
+      result += perf.volumeCredits
+    }
+    return result
+  }
 }
 
 function renderPlainText(data, plays) { // 중간 데이터 구조를 인수로 전달
@@ -124,17 +133,9 @@ function renderPlainText(data, plays) { // 중간 데이터 구조를 인수로 
     result += `  ${perf.play.name}: ${usd(perf.amount / 100)} (${perf.audience} seats)\n`
   }
   result += `Amount owed is ${usd(data.totalAmount)}\n`
-  result += `You earned ${totalVolumeCredits()} credits\n`
+  result += `You earned ${data.totalVolumeCredits} credits\n`
   return result
 
-  function totalVolumeCredits() {
-    let result = 0
-    for (let perf of data.performances) {
-      result += perf.volumeCredits
-    }
-    return result
-  }
-  
   function usd(aNumber) {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
