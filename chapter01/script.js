@@ -68,6 +68,7 @@ function statement(invoice) {
     const result = Object.assign({}, aPerformance); // 얕은 복사 수행
     result.play = playFor(result); // 중간 데이터에 연극 정보를 저장
     result.amount = amountFor(result); // 중간 데이터에 비용을 계산해 저장
+    result.volumeCredits = volumeCreditsFor(result); // 중간 데이터에 포인트를 계산해 저장
     return result;
   }
 
@@ -96,6 +97,15 @@ function statement(invoice) {
     }
     return result
   }
+
+  function volumeCreditsFor(aPerformance) {
+    let result = 0
+    result += Math.max(aPerformance.audience - 30, 0)
+    if ('commedy' === aPerformance.play.type) {
+      result += Math.floor(aPerformance.audience / 5)
+    }
+    return result
+  }
 }
 
 function renderPlainText(data, plays) { // 중간 데이터 구조를 인수로 전달
@@ -111,7 +121,7 @@ function renderPlainText(data, plays) { // 중간 데이터 구조를 인수로 
   function totalVolumeCredits() {
     let result = 0
     for (let perf of data.performances) {
-      result += volumeCreditsFor(perf)
+      result += perf.volumeCredits
     }
     return result
   }
@@ -120,15 +130,6 @@ function renderPlainText(data, plays) { // 중간 데이터 구조를 인수로 
     let result = 0
     for (let perf of data.performances) {
       result += perf.amount
-    }
-    return result
-  }
-  
-  function volumeCreditsFor(aPerformance) {
-    let result = 0
-    result += Math.max(aPerformance.audience - 30, 0)
-    if ('commedy' === aPerformance.play.type) {
-      result += Math.floor(aPerformance.audience / 5)
     }
     return result
   }
