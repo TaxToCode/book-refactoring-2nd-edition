@@ -59,11 +59,13 @@ function statementVanilla(invoice, plays) {
 // -------------------- 실습 코드 --------------------
 function statement(invoice) {
   const statementData = {};
+  statementData.customer = invoice.customer; // 고객 데이터를 중간 데이터로 옮김
+
   return renderPlainText(statementData, invoice, plays); // 중간 데이터 구조를 인수로 전달
 }
 
 function renderPlainText(data, invoice, plays) { // 중간 데이터 구조를 인수로 전달
-  let result = `Statement for ${invoice.customer}\n`
+  let result = `Statement for ${data.customer}\n`
   for (let perf of invoice.performances) {
     // print line for this order
     result += `  ${playFor(perf).name}: ${usd(amountFor(perf) / 100)} (${perf.audience} seats)\n`
