@@ -4,7 +4,7 @@ import plays from './plays.json' assert { type: 'json' }
 import invoices from './invoices.json' assert { type: 'json' }
 import createStatementData from './createStatementData.js'
 
-console.log(statement(invoices[0], plays))
+console.log(htmlStatement(invoices[0], plays))
 
 // -------------------- 예제 바닐라 --------------------
 // -------------------- 예제 바닐라 --------------------
@@ -58,11 +58,11 @@ function statementVanilla(invoice, plays) {
 // -------------------- 실습 코드 --------------------
 // -------------------- 실습 코드 --------------------
 // -------------------- 실습 코드 --------------------
-function statement(invoice) {
-  return renderPlainText(createStatementData(invoice, plays));
+function htmlStatement(invoice) {
+  return render(createStatementData(invoice, plays));
 }
 
-function renderPlainText(data, plays) { // 중간 데이터 구조를 인수로 전달
+function render(data) { // 중간 데이터 구조를 인수로 전달
   let result = `Statement for ${data.customer}\n`
   for (let perf of data.performances) {
     // print line for this order
@@ -71,12 +71,12 @@ function renderPlainText(data, plays) { // 중간 데이터 구조를 인수로 
   result += `Amount owed is ${usd(data.totalAmount)}\n`
   result += `You earned ${data.totalVolumeCredits} credits\n`
   return result
+}
 
-  function usd(aNumber) {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 2,
-    }).format(aNumber / 100)
-  }
+function usd(aNumber) {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+  }).format(aNumber / 100)
 }
