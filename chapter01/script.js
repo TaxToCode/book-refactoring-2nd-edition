@@ -61,6 +61,7 @@ function statement(invoice) {
   const statementData = {};
   statementData.customer = invoice.customer; // 고객 데이터를 중간 데이터로 옮김
   statementData.performances = invoice.performances.map(enrichPerformance); // 공연 정보를 중간 데이터로 옮김
+  statementData.totalAmount = totalAmount(statementData); // 총합을 계산하는 코드를 중간 데이터로 옮김
 
   return renderPlainText(statementData, plays); // 중간 데이터 구조를 인수로 전달
 
@@ -106,6 +107,14 @@ function statement(invoice) {
     }
     return result
   }
+
+  function totalAmount(data) {
+    let result = 0
+    for (let perf of data.performances) {
+      result += perf.amount
+    }
+    return result
+  }
 }
 
 function renderPlainText(data, plays) { // 중간 데이터 구조를 인수로 전달
@@ -114,7 +123,7 @@ function renderPlainText(data, plays) { // 중간 데이터 구조를 인수로 
     // print line for this order
     result += `  ${perf.play.name}: ${usd(perf.amount / 100)} (${perf.audience} seats)\n`
   }
-  result += `Amount owed is ${usd(totalAmount())}\n`
+  result += `Amount owed is ${usd(data.totalAmount)}\n`
   result += `You earned ${totalVolumeCredits()} credits\n`
   return result
 
@@ -122,14 +131,6 @@ function renderPlainText(data, plays) { // 중간 데이터 구조를 인수로 
     let result = 0
     for (let perf of data.performances) {
       result += perf.volumeCredits
-    }
-    return result
-  }
-
-  function totalAmount() {
-    let result = 0
-    for (let perf of data.performances) {
-      result += perf.amount
     }
     return result
   }
