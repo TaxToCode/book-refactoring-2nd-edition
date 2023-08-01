@@ -58,10 +58,11 @@ function statementVanilla(invoice, plays) {
 // -------------------- 실습 코드 --------------------
 // -------------------- 실습 코드 --------------------
 function statement(invoice) {
-  return renderPlainText(invoice, plays);
+  const statementData = {};
+  return renderPlainText(statementData, invoice, plays); // 중간 데이터 구조를 인수로 전달
 }
 
-function renderPlainText(invoice, plays) {
+function renderPlainText(data, invoice, plays) { // 중간 데이터 구조를 인수로 전달
   let result = `Statement for ${invoice.customer}\n`
   for (let perf of invoice.performances) {
     // print line for this order
