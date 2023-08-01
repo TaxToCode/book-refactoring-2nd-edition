@@ -58,13 +58,16 @@ function statementVanilla(invoice, plays) {
 // -------------------- 실습 코드 --------------------
 // -------------------- 실습 코드 --------------------
 function statement(invoice) {
+  return renderPlainText(createStatementData(invoice, plays));
+}
+
+function createStatementData(invoice, plays) { // 중간 데이터 생성을 전담하는 함수
   const statementData = {};
   statementData.customer = invoice.customer; // 고객 데이터를 중간 데이터로 옮김
   statementData.performances = invoice.performances.map(enrichPerformance); // 공연 정보를 중간 데이터로 옮김
   statementData.totalAmount = totalAmount(statementData); // 총합을 계산하는 코드를 중간 데이터로 옮김
   statementData.totalVolumeCredits = totalVolumeCredits(statementData); // 총 포인트를 계산하는 코드를 중간 데이터로 옮김
-
-  return renderPlainText(statementData, plays); // 중간 데이터 구조를 인수로 전달
+  return statementData;
 
   function enrichPerformance(aPerformance) {
     const result = Object.assign({}, aPerformance); // 얕은 복사 수행
