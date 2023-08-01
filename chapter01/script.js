@@ -66,7 +66,12 @@ function statement(invoice) {
 
   function enrichPerformance(aPerformance) {
     const result = Object.assign({}, aPerformance); // 얕은 복사 수행
+    result.play = playFor(result); // 중간 데이터에 연극 정보를 저장
     return result;
+  }
+
+  function playFor(aPerformance) { // renderPlaintText()의 중첩 함수였던 playFor()를 statement()로 옮김
+    return plays[aPerformance.playID]
   }
 }
 
