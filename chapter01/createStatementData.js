@@ -5,23 +5,7 @@ class PerformanceCalculator {
   }
 
   get amount() {
-    let result = 0; // 변수 초기화
-    switch (
-      this.play.type // amountFor() 함수가 매개변수로 받던 정보를 계산기 필드에서 바로 얻음
-    ) {
-      case 'tragedy':
-        throw '오류 발생'; // 비극 공연료는 TragedyCalculator를 이용하도록 유도한다
-      case 'comedy':
-        result = 30000;
-        if (this.performance.audience > 20) {
-          result += 10000 + 500 * (this.performance.audience - 20);
-        }
-        result += 300 * this.performance.audience;
-        break;
-      default:
-        throw new Error(`unknown type: ${this.play.type}`);
-    }
-    return result;
+    throw new Error('서브클래스로 옮겼음');
   }
 
   get volumeCredits() {
@@ -55,7 +39,16 @@ class TragedyCalculator extends PerformanceCalculator {
   }
 }
 
-class ComedyCalculator extends PerformanceCalculator {}
+class ComedyCalculator extends PerformanceCalculator {
+  get amount() {
+    let result = 30000;
+    if (this.performance.audience > 20) {
+      result += 10000 + 500 * (this.performance.audience - 20);
+    }
+    result += 300 * this.performance.audience;
+    return result;
+  }
+}
 
 export default function createStatementData(invoice, plays) {
   // 중간 데이터 생성을 전담하는 함수
