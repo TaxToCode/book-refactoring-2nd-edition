@@ -3,9 +3,34 @@ class PerformanceCalculator {
     this.performance = aPerformance;
     this.play = aPlay;
   }
+
+  get amount() {
+    let result = 0; // 변수 초기화
+    switch (
+      this.play.type // amountFor() 함수가 매개변수로 받던 정보를 계산기 필드에서 바로 얻음
+    ) {
+      case 'tragedy':
+        result = 40000;
+        if (this.performance.audience > 30) {
+          result += 1000 * (this.performance.audience - 30);
+        }
+        break;
+      case 'comedy':
+        result = 30000;
+        if (this.performance.audience > 20) {
+          result += 10000 + 500 * (this.performance.audience - 20);
+        }
+        result += 300 * this.performance.audience;
+        break;
+      default:
+        throw new Error(`unknown type: ${this.play.type}`);
+    }
+    return result;
+  }
 }
 
-export default function createStatementData(invoice, plays) { // 중간 데이터 생성을 전담하는 함수
+export default function createStatementData(invoice, plays) {
+  // 중간 데이터 생성을 전담하는 함수
   const statementData = {};
   statementData.customer = invoice.customer; // 고객 데이터를 중간 데이터로 옮김
   statementData.performances = invoice.performances.map(enrichPerformance); // 공연 정보를 중간 데이터로 옮김
@@ -22,39 +47,41 @@ export default function createStatementData(invoice, plays) { // 중간 데이�
     return result;
   }
 
-  function playFor(aPerformance) { // renderPlaintText()의 중첩 함수였던 playFor()를 statement()로 옮김
-    return plays[aPerformance.playID]
+  function playFor(aPerformance) {
+    // renderPlaintText()의 중첩 함수였던 playFor()를 statement()로 옮김
+    return plays[aPerformance.playID];
   }
 
   function amountFor(aPerformance) {
-    let result = 0 // 변수 초기화
-    switch (aPerformance.play.type) {
-      case 'tragedy':
-        result = 40000
-        if (aPerformance.audience > 30) {
-          result += 1000 * (aPerformance.audience - 30)
-        }
-        break
-      case 'comedy':
-        result = 30000
-        if (aPerformance.audience > 20) {
-          result += 10000 + 500 * (aPerformance.audience - 20)
-        }
-        result += 300 * aPerformance.audience
-        break
-      default:
-        throw new Error(`unknown type: ${aPerformance.play.type}`)
-    }
-    return result
+    return new PerformanceCalculator(aPerformance, playFor(aPerformance)).amount; // 원본 함수인 amountFor()도 계산기 이용하도록 수정
+    // let result = 0; // 변수 초기화
+    // switch (aPerformance.play.type) {
+    //   case 'tragedy':
+    //     result = 40000;
+    //     if (aPerformance.audience > 30) {
+    //       result += 1000 * (aPerformance.audience - 30);
+    //     }
+    //     break;
+    //   case 'comedy':
+    //     result = 30000;
+    //     if (aPerformance.audience > 20) {
+    //       result += 10000 + 500 * (aPerformance.audience - 20);
+    //     }
+    //     result += 300 * aPerformance.audience;
+    //     break;
+    //   default:
+    //     throw new Error(`unknown type: ${aPerformance.play.type}`);
+    // }
+    // return result;
   }
 
   function volumeCreditsFor(aPerformance) {
-    let result = 0
-    result += Math.max(aPerformance.audience - 30, 0)
+    let result = 0;
+    result += Math.max(aPerformance.audience - 30, 0);
     if ('commedy' === aPerformance.play.type) {
-      result += Math.floor(aPerformance.audience / 5)
+      result += Math.floor(aPerformance.audience / 5);
     }
-    return result
+    return result;
   }
 
   function totalAmount(data) {
