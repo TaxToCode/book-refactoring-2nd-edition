@@ -10,11 +10,7 @@ class PerformanceCalculator {
       this.play.type // amountFor() 함수가 매개변수로 받던 정보를 계산기 필드에서 바로 얻음
     ) {
       case 'tragedy':
-        result = 40000;
-        if (this.performance.audience > 30) {
-          result += 1000 * (this.performance.audience - 30);
-        }
-        break;
+        throw '오류 발생'; // 비극 공연료는 TragedyCalculator를 이용하도록 유도한다
       case 'comedy':
         result = 30000;
         if (this.performance.audience > 20) {
@@ -39,7 +35,6 @@ class PerformanceCalculator {
 }
 
 function createPerformanceCalculator(aPerformance, aPlay) {
-  // return new PerformanceCalculator(aPerformance, aPlay);
   switch (aPlay.type) {
     case 'tragedy':
       return new TragedyCalculator(aPerformance, aPlay);
@@ -50,7 +45,15 @@ function createPerformanceCalculator(aPerformance, aPlay) {
   }
 }
 
-class TragedyCalculator extends PerformanceCalculator {}
+class TragedyCalculator extends PerformanceCalculator {
+  get amount() {
+    let result = 40000;
+    if (this.performance.audience > 30) {
+      result += 1000 * (this.performance.audience - 30);
+    }
+    return result;
+  }
+}
 
 class ComedyCalculator extends PerformanceCalculator {}
 
