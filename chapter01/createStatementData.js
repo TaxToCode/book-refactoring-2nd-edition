@@ -28,7 +28,7 @@ class PerformanceCalculator {
     return result;
   }
 
-  get volumeCreditsFor() {
+  get volumeCredits() {
     let result = 0;
     result += Math.max(this.performance.audience - 30, 0);
     if ('commedy' === this.play.type) {
@@ -61,23 +61,13 @@ export default function createStatementData(invoice, plays) {
     const result = Object.assign({}, aPerformance); // 얕은 복사 수행
     result.play = calculator.play; // 중간 데이터에 연극 정보를 저장
     result.amount = calculator.amount; // 중간 데이터에 비용을 계산해 저장
-    result.volumeCredits = volumeCreditsFor(result); // 중간 데이터에 포인트를 계산해 저장
+    result.volumeCredits = calculator.volumeCredits; // 중간 데이터에 포인트를 계산해 저장
     return result;
   }
 
   function playFor(aPerformance) {
     // renderPlaintText()의 중첩 함수였던 playFor()를 statement()로 옮김
     return plays[aPerformance.playID];
-  }
-
-  function volumeCreditsFor(aPerformance) {
-    // let result = 0;
-    // result += Math.max(aPerformance.audience - 30, 0);
-    // if ('commedy' === aPerformance.play.type) {
-    //   result += Math.floor(aPerformance.audience / 5);
-    // }
-    // return result;
-    return new PerformanceCalculator(aPerformance, playFor(aPerformance)).volumeCreditsFor;
   }
 
   function totalAmount(data) {
