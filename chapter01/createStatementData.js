@@ -36,15 +36,10 @@ class PerformanceCalculator {
     }
     return result;
   }
+}
 
-  // function volumeCreditsFor(aPerformance) {
-  //   let result = 0;
-  //   result += Math.max(aPerformance.audience - 30, 0);
-  //   if ('commedy' === aPerformance.play.type) {
-  //     result += Math.floor(aPerformance.audience / 5);
-  //   }
-  //   return result;
-  // }
+function createPerformanceCalculator(aPerformance, aPlay) {
+  return new PerformanceCalculator(aPerformance, aPlay);
 }
 
 export default function createStatementData(invoice, plays) {
@@ -57,7 +52,7 @@ export default function createStatementData(invoice, plays) {
   return statementData;
 
   function enrichPerformance(aPerformance) {
-    const calculator = new PerformanceCalculator(aPerformance, playFor(aPerformance)); // 공연료 계산기 생성
+    const calculator = createPerformanceCalculator(aPerformance, playFor(aPerformance)); // 공연료 계산기 생성
     const result = Object.assign({}, aPerformance); // 얕은 복사 수행
     result.play = calculator.play; // 중간 데이터에 연극 정보를 저장
     result.amount = calculator.amount; // 중간 데이터에 비용을 계산해 저장
