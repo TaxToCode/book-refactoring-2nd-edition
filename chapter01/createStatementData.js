@@ -1,3 +1,9 @@
+class PerformanceCalculator {
+  constructor(aPerformance) {
+    this.performance = aPerformance;
+  }
+}
+
 export default function createStatementData(invoice, plays) { // 중간 데이터 생성을 전담하는 함수
   const statementData = {};
   statementData.customer = invoice.customer; // 고객 데이터를 중간 데이터로 옮김
@@ -7,6 +13,7 @@ export default function createStatementData(invoice, plays) { // 중간 데이�
   return statementData;
 
   function enrichPerformance(aPerformance) {
+    const calculator = new PerformanceCalculator(aPerformance); // 공연료 계산기 생성
     const result = Object.assign({}, aPerformance); // 얕은 복사 수행
     result.play = playFor(result); // 중간 데이터에 연극 정보를 저장
     result.amount = amountFor(result); // 중간 데이터에 비용을 계산해 저장
